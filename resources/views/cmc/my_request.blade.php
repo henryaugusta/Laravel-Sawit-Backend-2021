@@ -32,9 +32,12 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{url("/cmc/create-new")}}">
-                            <div class="btn btn-outline-primary mb-3">Buat Permintaan Baru</div>
-                        </a>
+
+                        @if(Auth::user()->role=="3")
+                            <a href="{{url("/cmc/create-new")}}">
+                                <div class="btn btn-outline-primary mb-3">Buat Permintaan Baru</div>
+                            </a>
+                        @endif
                         <h4 class="card-title">Lihat Seluruh Pemintaan Saya</h4>
                     </div>
 
@@ -43,7 +46,8 @@
 
                         @if(count($datas) == 0)
                             <div class="text-center">
-                                <iframe src="https://lottie.host/embed/b4d8d750-88a2-4492-a776-91de77675034/AKuJuLPq5m.json"></iframe>
+                                <iframe
+                                    src="https://lottie.host/embed/b4d8d750-88a2-4492-a776-91de77675034/AKuJuLPq5m.json"></iframe>
                                 <p class="text-black">Belum Ada Permintaan Yang Perlu Diproses</p>
                             </div>
                         @endif
@@ -56,10 +60,10 @@
                                         <tr>
                                             <th data-sortable="" class="text-nowrap">No</th>
                                             <th data-sortable="" class="text-nowrap">Nomor Surat Jalan</th>
-                                            <th data-sortable="" class="text-nowrap">Dijual Kepada</th>
-                                            <th data-sortable="" class="text-nowrap">Dikirim Ke</th>
-                                            <th data-sortable="" class="text-nowrap">Alamat Pengambilan</th>
                                             <th data-sortable="" class="text-nowrap">Disiapkan Oleh</th>
+                                            <th data-sortable="" class="text-nowrap">Proses Terakhir</th>
+                                            <th data-sortable="" class="text-nowrap">Attachment</th>
+                                            <th data-sortable="" class="text-nowrap">Deadline</th>
                                             <th data-sortable="" class="text-nowrap">Tanggal</th>
                                             <th data-sortable="" class="text-nowrap"></th>
                                         </tr>
@@ -68,20 +72,85 @@
                                         @forelse ($datas as $data)
 
                                             @php
-                                                $disiapkanOlehName = \App\Models\User::findOrFail($data->disiapkan_oleh)->name;
+                                                $disiapkanOlehName = "";
+                                                $prosesTerakhirName ="";
+
+                                                $disiapkanOleh = \App\Models\User::find($data->disiapkan_oleh);
+                                                if($disiapkanOleh!=null){
+                                                  $disiapkanOlehName = $disiapkanOleh->name;
+                                                }
+                                                $prosesTerakhir = ($data->last_process_by);
+                                                if($prosesTerakhir!=null){
+                                                     switch ($prosesTerakhir){
+                                                        case 4:
+                                                            $prosesTerakhirName = "Warehouse";
+                                                            break;
+                                                        case 3:
+                                                            $prosesTerakhirName = "Customer";
+                                                            break;
+                                                        case 2 :
+                                                            $prosesTerakhirName = "Commercial";
+                                                            break;
+                                                        case 1 :
+                                                            $prosesTerakhirName = "Admin";
+                                                            break;
+                                                    }
+                                                }
                                             @endphp
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $data->nomor_surat_jalan }}</td>
-                                                <td>{{ $data->dijual_kepada }}</td>
-                                                <td>{{ $data->dikirim_ke }}</td>
-                                                <td>{{ $data->alamat_pengambilan }}</td>
                                                 <td>{{ $disiapkanOlehName }}</td>
-                                                <td>{{ $data->created_at }}</td>
+                                                <td>{{ $prosesTerakhirName }}</td>
+                                                <td class="text-nowrap">
+                                                    <a href="{{asset("$data->attachment")}}" class="btn btn-primary"
+                                                       target="_blank">View Attachment</a>
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    @if (!empty($data->deadline))
+                                                        <span id="countdown_{{ $loop->iteration }}"></span>
+                                                        <script>
+                                                            // Ambil deadline dari variabel PHP
+                                                            var deadline = "{{ $data->deadline }}";
+
+                                                            // Ubah string deadline menjadi objek Date JavaScript
+                                                            var deadlineDate = new Date(deadline);
+
+                                                            // Perbarui timer hitung mundur setiap detik
+                                                            var countdownInterval = setInterval(function () {
+                                                                // Ambil waktu sekarang
+                                                                var sekarang = new Date().getTime();
+
+                                                                // Hitung sisa waktu antara waktu sekarang dan deadline
+                                                                var sisaWaktu = deadlineDate - sekarang;
+
+                                                                // Jika deadline telah lewat, tampilkan "Kedaluwarsa"
+                                                                if (sisaWaktu <= 0) {
+                                                                    document.getElementById("countdown_{{ $loop->iteration }}").innerHTML = "Kedaluwarsa";
+                                                                    clearInterval(countdownInterval);
+                                                                } else {
+                                                                    // Hitung hari, jam, menit, dan detik
+                                                                    var hari = Math.floor(sisaWaktu / (1000 * 60 * 60 * 24));
+                                                                    var jam = Math.floor((sisaWaktu % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                                    var menit = Math.floor((sisaWaktu % (1000 * 60 * 60)) / (1000 * 60));
+                                                                    var detik = Math.floor((sisaWaktu % (1000 * 60)) / 1000);
+
+                                                                    // Tampilkan timer hitung mundur
+                                                                    document.getElementById("countdown_{{ $loop->iteration }}").innerHTML = hari + " hari " + jam + " jam "
+                                                                        + menit + " menit " + detik + " detik ";
+                                                                }
+                                                            }, 1000);
+                                                        </script>
+                                                    @else
+                                                        Tidak ada Deadline
+                                                    @endif
+                                                </td>
+                                                <td class="">
+                                                    {{ $data->created_at }}</td>
                                                 <td>
                                                     <a href="{{url('cmc/'.$data->id.'/edit')}}">
                                                         <button id="{{ $data->id }}" type="button"
-                                                                class="btn btn-primary text-nowrap">Edit Data
+                                                                class="btn btn-outline-primary text-nowrap">Edit Data
                                                         </button>
                                                     </a>
 

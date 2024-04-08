@@ -19,6 +19,23 @@
 
     <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
 
+
+    <style>
+        .pdf-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* Aspect ratio: 16:9 (adjust as needed) */
+        }
+
+        .pdf-container embed,
+        .pdf-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
     @stack('page-style')
 
 </head>

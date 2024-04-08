@@ -66,7 +66,7 @@
                     </div> --}}
                     <br>
                     <br>
-                    <h4><a class="font-bold text-center mt-4" style="text-align: center" href="#">Crafted for CV CMC</a>.</h4>
+                    <h4 class="d-none"><a class="font-bold text-center mt-4" style="text-align: center" href="#">Crafted for CV CMC</a>.</h4>
 
                 </div>
             </div>

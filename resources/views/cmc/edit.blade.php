@@ -29,13 +29,11 @@
     <section class="section">
 
         <div class="card">
-
             <div class="card-body">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Disiapkan Oleh</h4>
                     </div>
-
                     <div class="card-body py-4 px-4">
                         <div class="d-flex align-items-center">
                             <div class="avatar avatar-xl">
@@ -53,8 +51,35 @@
                     </div>
                 </div>
             </div>
-
         </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Ekspedisi</h4>
+                    </div>
+                    <div class="card-body py-4 px-4">
+                        <div class="d-flex align-items-center">
+                            <div class="ms-3 name">
+                                @php
+                                    $armada = \App\Models\Truck::findOrFail($data->id_armada);
+                                @endphp
+                                <div class="border p-3">
+                                    <img height="300px" style="border-radius: 20px" src="/razky_samples/truck/colt_diesel.png" alt="" srcset="">
+                                    <ul>
+                                        <li class="mt-3">Nama : {{$armada->name}}</li>
+                                        <li>Nopol : {{$armada->nopol}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">Data Permintaan</h4>
@@ -345,49 +370,50 @@
                                        value="{{ old('nomor_surat_jalan_date', $data->nomor_surat_jalan_date) }}"
                                        id="basicInput" placeholder="Nomor Surat Jalan Date">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Order Reference</label>
                                 <input type="text" name="order_reference" class="form-control"
                                        value="{{ old('order_reference', $data->order_reference) }}" id="basicInput"
                                        placeholder="Order Reference">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Order Penjualan No</label>
                                 <input type="text" name="order_penjualan_nomor" class="form-control"
                                        value="{{ old('order_penjualan_nomor', $data->order_penjualan_nomor) }}"
                                        id="basicInput" placeholder="Order Penjualan No">
                             </div>
-                            <div class="form-group">
-                                <label for="basicInput">Tanggal Order Penjualan</label>
-                                <input type="datetime-local" name="order_penjualan_nomor_date" class="form-control"
-                                       value="{{ old('order_penjualan_nomor_date', $data->order_penjualan_nomor_date) }}"
-                                       id="basicInput" placeholder="Tanggal Order Penjualan">
-                            </div>
 
 
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Alamat Pengambilan</label>
                                 <textarea name="alamat_pengambilan" class="form-control"
                                           placeholder="Alamat Pengambilan">{{ old('alamat_pengambilan', $data->alamat_pengambilan) }}</textarea>
                             </div>
                             <div class="form-group">
+                                <label for="basicInput">Deadline</label>
+                                <input type="datetime-local" name="deadline" class="form-control"
+                                       value="{{ old('deadline', $data->deadline) }}"
+                                       id="basicInput" placeholder="Deadline">
+                            </div>
+                            <div class="form-group d-none">
                                 <label for="basicInput">Dijual Kepada</label>
                                 <textarea name="dijual_kepada" class="form-control"
                                           placeholder="Dijual Kepada">{{ old('dijual_kepada', $data->dijual_kepada) }}</textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Dikirim Ke</label>
                                 <textarea name="dikirim_ke" class="form-control"
                                           placeholder="Dikirim Ke">{{ old('dikirim_ke', $data->dikirim_ke) }}</textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Komentar Cust</label>
                                 <textarea name="comment_customer" class="form-control"
                                           placeholder="Komentar">{{ old('comment_customer', $data->comment_customer) }}</textarea>
                             </div>
                         </div>
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <table class="table" id="barangTable">
@@ -434,10 +460,26 @@
                                     </tbody>
                                 </table>
                                 @if(Auth::user()->role==2)
-                                    <button type="button" class="btn btn-outline-primary" id="addRow">Tambah Barang</button>
+                                    <button type="button" class="btn btn-outline-primary" id="addRow">Tambah Barang
+                                    </button>
                                 @endif
                             </div>
                         </div>
+
+                        @if($data->attachment!="")
+                            <div class="col-md-12 mt-2 mb-5">
+                                <h3 class="card-title text-black">
+                                    Attachment
+                                </h3>
+                                <div class="pdf-container">
+                                    <!-- Using the embed tag -->
+                                    <embed src="{{asset("$data->attachment")}}" width="800px" height="600px"/>
+
+                                    <!-- Or using the iframe tag -->
+                                    <!-- <iframe src="path_to_your_pdf_file.pdf" width="800px" height="600px"></iframe> -->
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
@@ -445,6 +487,45 @@
                 </form>
             </div>
         </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="">Riwayat Proses Transaksi</h3>
+            </div>
+
+            <div class="card-body">
+                <ul class="timeline">
+                    @foreach($timelineEntries as $entry)
+                        <li>
+                            <div class="timeline-badge bg-primary"></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h6 class="timeline-title">{{ $entry->action }}</h6>
+                                    <h6><small
+                                            class="text-muted">{{ $entry->created_at->format('M d, Y H:i A') }}</small>
+                                    </h6>
+                                </div>
+                                <div class="timeline-body">
+                                    @php
+
+                                        $endUserObj = \App\Models\User::find($entry->last_man)
+                                    @endphp
+
+                                    @if($endUserObj!=null)
+                                        <h6><small
+                                                class="text-muted">{{$endUserObj->name}}
+                                                - {{$entry->action}}</small>
+                                        </h6>
+                                    @endif
+
+                                </div>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+
     </section>
 @endsection
 

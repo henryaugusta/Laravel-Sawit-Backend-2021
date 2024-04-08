@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\RazkyFeb;
+use App\Models\CMCTimeline;
 use App\Models\PoRequest;
 use App\Models\Truck;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use const http\Client\Curl\AUTH_ANY;
 
 class NewCMCController extends Controller
 {
@@ -19,7 +22,9 @@ class NewCMCController extends Controller
         if (Auth::user()->role == 4) {
             $users = User::where("role", '=', '4')->get();
         }
-        return view('cmc.edit')->with(compact('data', 'ekspedisiList', 'users'));
+        $timelineEntries = CMCTimeline::where("po_requests_id",'=',$id)->orderBy("created_at","DESC")->get();
+        // Assuming $timelineEntries is a collection of CMCTimeline objects
+        return view('cmc.edit')->with(compact('data', 'ekspedisiList', 'users','timelineEntries'));
     }
 
     public function commercialRequestView(Request $request)
@@ -112,8 +117,35 @@ class NewCMCController extends Controller
         $poRequest->last_process_by = Auth::user()->role;
         $poRequest->products = json_encode($products);
 
+        if ($request->hasFile('attachment')) {
+
+            $file_path = public_path() . $poRequest->photo;
+            RazkyFeb::removeFile($file_path);
+
+            $file = $request->file('attachment');
+            $extension = $file->getClientOriginalExtension(); // you can also use file name
+            $fileName = time() . '.' . $extension;
+
+            $savePath = "/web_files/po_attachment/";
+            $savePathDB = "$savePath$fileName";
+            $path = public_path() . "$savePath";
+            $file->move($path, $fileName);
+
+            $photoPath = $savePathDB;
+            $poRequest->attachment = $photoPath;
+        }
+        $poRequest->deadline = $request->deadline;
+
+
         // Save the data
         if ($poRequest->save()) {
+            //add logger to timeline
+            CMCTimeline::create([
+                'action' => "Pembuatan Permintaan Baru",
+                'po_requests_id' => $poRequest->id,
+                'last_man' => Auth::id(),
+                'edited_field' => $poRequest,
+            ]);
             return back()->with(["success" => "Data saved successfully"]);
         } else {
             return back()->with(["error" => "Saving process failed"]);
@@ -164,6 +196,22 @@ class NewCMCController extends Controller
 //        }
         $poRequest->last_process_by = Auth::user()->role;
 //        $poRequest->products = json_encode($products);
+
+        $action = "Edit Data";
+
+        if (Auth::user()->role==2 && $request->po_number!=""){
+            $action = Auth::user()->name." "."Telah Menginput Nomor PO :"." ".$request->po_number;
+        }
+        if (Auth::user()->role==4 && $request->po_number!=""){
+            $action = Auth::user()->name." "."Telah Menginput Armada Ekspedisi";
+        }
+        // Create a new CMCTimeline entry if there are changes
+        CMCTimeline::create([
+            'action' => $action,
+            'po_requests_id' => $poRequest->id,
+            'last_man' => Auth::id(),
+            'edited_field' => $poRequest,
+        ]);
 
         // Save the updated data
         if ($poRequest->save()) {

@@ -39,33 +39,42 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="basicInput">Nomor Surat Jalan</label>
-                                <input type="text" name="nomor_surat_jalan" class="form-control" value="{{ old('nomor_surat_jalan') }}" id="basicInput" placeholder="Nomor Surat Jalan">
+                                <input type="text" name="nomor_surat_jalan" class="form-control"
+                                       value="{{ old('nomor_surat_jalan') }}" id="basicInput"
+                                       placeholder="Nomor Surat Jalan">
                             </div>
 
                             <div class="form-group">
                                 <label for="basicInput">Tanggal Nomor Surat Jalan</label>
-                                <input type="datetime-local" name="nomor_surat_jalan_date" class="form-control" value="{{ old('nomor_surat_jalan_date') }}" id="basicInput" placeholder="Nomor Surat Jalan Date">
+                                <input type="datetime-local" name="nomor_surat_jalan_date" class="form-control"
+                                       value="{{ old('nomor_surat_jalan_date') }}" id="basicInput"
+                                       placeholder="Nomor Surat Jalan Date">
                                 <!-- You might want to use a date input type if it's a date -->
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Order Reference</label>
-                                <input type="text" name="order_reference" class="form-control" value="{{ old('order_reference') }}" id="basicInput" placeholder="Order Reference">
+                                <input type="text" name="order_reference" class="form-control"
+                                       value="{{ old('order_reference') }}" id="basicInput"
+                                       placeholder="Order Reference">
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Order Penjualan No</label>
-                                <input type="text" name="order_penjualan_nomor" class="form-control" value="{{ old('order_penjualan_nomor') }}" id="basicInput" placeholder="Order Penjualan No">
+                                <input type="text" name="order_penjualan_nomor" class="form-control"
+                                       value="{{ old('order_penjualan_nomor') }}" id="basicInput"
+                                       placeholder="Order Penjualan No">
                             </div>
 
                             <div class="form-group">
-                                <label for="basicInput">Tanggal Order Penjualan</label>
-                                <input type="datetime-local" name="order_penjualan_nomor_date" class="form-control" value="{{ old('order_penjualan_nomor_date') }}" id="basicInput" placeholder="Tanggal Order Penjualan">
+                                <label for="basicInput">Deadline</label>
+                                <input type="datetime-local" name="deadline" class="form-control"
+                                       value="{{ old('deadline') }}" id="basicInput" placeholder="Deadline">
                             </div>
 
                             <!-- Add other fields in a similar manner... -->
 
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Ekspedisi</label>
                                 <select name="ekspedisi" class="form-control">
                                     <!-- Assuming you have a list of ekspedisi, you can dynamically populate the options -->
@@ -79,25 +88,35 @@
                         <div class="col-md-6">
                             <!-- Add other fields in a similar manner... -->
 
-
                             <div class="form-group">
+                                <label for="formFile" class="form-label">Attachment</label>
+                                <input name="attachment" class="form-control" type="file" id="formFile"
+                                       accept="application/pdf" onchange="">
+                            </div>
+
+                            <iframe src="" id="iframe-pdf" width="120px" height="10px"></iframe>
+
+                            <div class="form-group d-none">
                                 <label for="basicInput">Alamat Pengambilan</label>
-                                <textarea name="alamat_pengambilan" class="form-control" placeholder="Alamat Pengambilan">{{ old('alamat_pengambilan') }}</textarea>
+                                <textarea name="alamat_pengambilan" class="form-control"
+                                          placeholder="Alamat Pengambilan">{{ old('alamat_pengambilan') }}</textarea>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Dijual Kepada</label>
-                                <textarea name="dijual_kepada" class="form-control" placeholder="Dijual Kepada">{{ old('dijual_kepada') }}</textarea>
+                                <textarea name="dijual_kepada" class="form-control"
+                                          placeholder="Dijual Kepada">{{ old('dijual_kepada') }}</textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="basicInput">Dikirim Ke</label>
-                                <textarea name="dikirim_ke" class="form-control" placeholder="Dikirim Ke">{{ old('dikirim_ke') }}</textarea>
+                                <textarea name="dikirim_ke" class="form-control"
+                                          placeholder="Dikirim Ke">{{ old('dikirim_ke') }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="basicInput">Komentar</label>
-                                <textarea name="comment_customer" class="form-control" placeholder="Komentar">{{ old('comment_customer') }}</textarea>
+                                <textarea name="comment_customer" class="form-control"
+                                          placeholder="Komentar">{{ old('comment_customer') }}</textarea>
                             </div>
-
 
 
                             <!-- Add other fields in a similar manner... -->
@@ -179,18 +198,17 @@
 @push('script')
     <script>
         var el = document.getElementById('formFile');
-        el.onchange = function() {
+        el.onchange = function () {
             var fileReader = new FileReader();
             fileReader.readAsDataURL(document.getElementById("formFile").files[0])
-            fileReader.onload = function(oFREvent) {
+            fileReader.onload = function (oFREvent) {
                 document.getElementById("imgPreview").src = oFREvent.target.result;
             };
         }
 
 
-
-        $(document).ready(function() {
-            $.myfunction = function() {
+        $(document).ready(function () {
+            $.myfunction = function () {
                 $("#previewName").text($("#inputTitle").val());
                 var title = $.trim($("#inputTitle").val())
                 if (title == "") {
@@ -198,7 +216,7 @@
                 }
             };
 
-            $("#inputTitle").keyup(function() {
+            $("#inputTitle").keyup(function () {
                 $.myfunction();
             });
 
