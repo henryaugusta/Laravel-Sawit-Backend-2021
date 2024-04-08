@@ -28,11 +28,16 @@
                         {{-- <a href="index.html"><img src="{{ asset('/frontend') }}/assets/images/logo/logo.png"
                                 alt="Logo"></a> --}}
 
-                        <h1>Aplikasi Tracking PO</h1>
+                        <div class=" ">
+                            {{--                    <h1 class="mr-3">{{config('app.name')}}</h1>--}}
+                            <a href="{{url('/')}}"><img src="{{asset('frontend/assets/images/logo/logo.png')}}" alt="Logo"
+                                                        srcset="" style="height: 120px !important;"></a>
+                        </div>
                     </div>
                     <h1 class="auth-title">Log in.</h1>
                     <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
                     @include('components.message')
+
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="form-group position-relative has-icon-left mb-4">

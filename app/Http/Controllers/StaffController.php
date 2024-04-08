@@ -24,6 +24,13 @@ class StaffController extends Controller
         return view('user.edit')->with(compact('users'));
     }
 
+    public function viewMyProfile()
+    {
+        $id = Auth::id();
+        $users = User::where('id', '=', $id)->first();
+        return view('user.myprofile')->with(compact('users'));
+    }
+
     public function viewAdminCreate()
     {
         return view('user.create');
@@ -82,14 +89,13 @@ class StaffController extends Controller
 
     function update(Request $request)
     {
+
         //        return $request;
         $validateComponent = [
             "user_name" => "required",
             "user_email" => "required",
-            "user_role" => "required",
         ];
 
-        $this->validate($request, $validateComponent);
 
         $user = User::find($request->id);
         if ($request->id == null)
@@ -98,7 +104,22 @@ class StaffController extends Controller
         $user->name = $request->user_name;
         $user->email = $request->user_email;
         $user->contact = $request->user_contact;
-        $user->role = ($request->user_role);
+
+        if ($request->updateself != "true") {
+            $user->role = ($request->user_role);
+        }
+
+        if ($request->updateself == "true") {
+            // Check if both old_password and new_password are provided and not empty
+            if ($request->filled('old_password') && $request->filled('new_password')) {
+                // Check if old password matches the current password
+                if (!Hash::check($request->old_password, $user->password)) {
+                    return back()->with(["error" => "Password Lama Tidak Sesuai"]);
+                }
+                // Update password
+                $user->password = Hash::make($request->new_password);
+            }
+        }
 
 
         if ($user->update()) {

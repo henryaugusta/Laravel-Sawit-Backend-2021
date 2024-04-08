@@ -128,6 +128,13 @@
                 @endif
 
 
+                <li class="sidebar-title">Profile</li>
+                <li class="sidebar-item
+                            {{(Request::is('my-profile')) ? 'active' : ''}}">
+                    <a href="{{url('my-profile')}}" class='sidebar-link'>
+                        <span>Update Profile</span>
+                    </a>
+                </li>
                 <li class="sidebar-title">Logout</li>
                 <li class="sidebar-item  ">
 

@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin/user/create', [App\Http\Controllers\StaffController::class, 'viewAdminCreate']);
     Route::get('/admin/user/manage', [App\Http\Controllers\StaffController::class, 'viewAdminManage']);
     Route::get('/admin/user/{id}/edit', [App\Http\Controllers\StaffController::class, 'viewAdminEdit']);
+    Route::get('my-profile', [App\Http\Controllers\StaffController::class, 'viewMyProfile']);
 });
 
 Route::get('logout', function () {
