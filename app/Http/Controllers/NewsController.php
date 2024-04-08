@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\RazkyFeb;
+use App\Helper\MyHelper;
 use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,7 +89,7 @@ class NewsController extends Controller
         if ($request->hasFile('photo')) {
 
             $file_path = public_path() . $data->photo;
-            RazkyFeb::removeFile($file_path);
+            MyHelper::removeFile($file_path);
 
             $file = $request->file('photo');
             $extension = $file->getClientOriginalExtension(); // you can also use file name
@@ -118,7 +118,7 @@ class NewsController extends Controller
 
         if ($data->delete()) {
             if ($request->is('api/*'))
-                return RazkyFeb::responseSuccessWithData(
+                return MyHelper::responseSuccessWithData(
                     200, 1, 200,
                     "Berhasil Menghapus Data",
                     "Success",
@@ -127,7 +127,7 @@ class NewsController extends Controller
             return back()->with(["success" => "Berhasil Menghapus Data"]);
         } else {
             if ($request->is('api/*'))
-                return RazkyFeb::responseErrorWithData(
+                return MyHelper::responseErrorWithData(
                     400, 3, 400,
                     "Berhasil Mengupdate Data",
                     "Success",
@@ -158,7 +158,7 @@ class NewsController extends Controller
     {
         if ($data->save()) {
             if ($request->is('api/*'))
-                return RazkyFeb::responseSuccessWithData(
+                return MyHelper::responseSuccessWithData(
                     200, 1, 200,
                     "Berhasil Menyimpan Data",
                     "Success",
@@ -168,7 +168,7 @@ class NewsController extends Controller
             return back()->with(["success" => "Berhasil Mengupdate Data"]);
         } else {
             if ($request->is('api/*'))
-                return RazkyFeb::responseErrorWithData(
+                return MyHelper::responseErrorWithData(
                     400, 3, 400,
                     "Berhasil Mengupdate Data",
                     "Success",

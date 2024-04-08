@@ -73,8 +73,7 @@
                     <p>2021 &copy; CMC</p>
                 </div>
                 <div class="float-end">
-                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                            href="http://ahmadsaugi.com">Feylaboratory</a></p>
+
                 </div>
             </div>
         </footer>

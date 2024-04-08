@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\RazkyFeb;
+use App\Helper\MyHelper;
 use App\Models\CMCTimeline;
 use App\Models\PoRequest;
 use App\Models\Truck;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use const http\Client\Curl\AUTH_ANY;
 
 class NewCMCController extends Controller
 {
@@ -120,7 +119,7 @@ class NewCMCController extends Controller
         if ($request->hasFile('attachment')) {
 
             $file_path = public_path() . $poRequest->photo;
-            RazkyFeb::removeFile($file_path);
+            MyHelper::removeFile($file_path);
 
             $file = $request->file('attachment');
             $extension = $file->getClientOriginalExtension(); // you can also use file name

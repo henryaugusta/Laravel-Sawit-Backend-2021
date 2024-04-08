@@ -33,6 +33,18 @@ class HomeController extends Controller
 
     public function admin()
     {
+        if (Auth::user()->role == 1) {
+            return redirect('/admin/user/manage');
+        }
+        if (Auth::user()->role == 3) {
+            return redirect('/cust/my-cmc-request');
+        }
+        if (Auth::user()->role ==4) {
+            return redirect('/warehouse/my-cmc-request');
+        }
+        if (Auth::user()->role ==2) {
+            return redirect('/commercial/my-cmc-request');
+        }
         return view('home.admin');
     }
 }

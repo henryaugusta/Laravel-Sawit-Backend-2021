@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\RazkyFeb;
+use App\Helper\MyHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +104,7 @@ class StaffController extends Controller
         if ($user->update()) {
             // IF REQUEST IS FROM API
             if ($request->is('api/*'))
-                return RazkyFeb::responseSuccessWithData(
+                return MyHelper::responseSuccessWithData(
                     200,
                     1,
                     200,
@@ -120,7 +120,7 @@ class StaffController extends Controller
             return back()->with(["success" => "Berhasil Mengupdate Data User"]);
         } else {
             if ($request->is('api/*'))
-                return RazkyFeb::responseErrorWithData(
+                return MyHelper::responseErrorWithData(
                     400,
                     3,
                     400,
@@ -144,7 +144,7 @@ class StaffController extends Controller
         if ($request->hasFile('photo')) {
 
             $file_path = public_path() . $user->photo;
-            RazkyFeb::removeFile($file_path);
+            MyHelper::removeFile($file_path);
 
             $file = $request->file('photo');
             $extension = $file->getClientOriginalExtension(); // you can also use file name
@@ -159,7 +159,7 @@ class StaffController extends Controller
 
             if ($user->save()) {
                 if ($request->is('api/*'))
-                    return RazkyFeb::responseSuccessWithData(
+                    return MyHelper::responseSuccessWithData(
                         200,
                         1,
                         200,
@@ -171,7 +171,7 @@ class StaffController extends Controller
                 return redirect($request->redirectTo)->with(["success" => "Berhasil Mengupdate Profil"]);
             } else {
                 if ($request->is('api/*'))
-                    return RazkyFeb::responseErrorWithData(
+                    return MyHelper::responseErrorWithData(
                         400,
                         3,
                         400,
@@ -184,7 +184,7 @@ class StaffController extends Controller
             }
         } else {
             if ($request->is('api/*'))
-                return RazkyFeb::responseErrorWithData(
+                return MyHelper::responseErrorWithData(
                     400,
                     3,
                     400,
@@ -214,7 +214,7 @@ class StaffController extends Controller
         //If Password Sesuai
         if (!$hasher->check($request->old_password, $user->password)) {
             if ($request->is('api/*'))
-                return RazkyFeb::responseErrorWithData(
+                return MyHelper::responseErrorWithData(
                     400,
                     3,
                     400,
@@ -230,7 +230,7 @@ class StaffController extends Controller
 
             if ($user) {
                 if ($request->is('api/*'))
-                    return RazkyFeb::responseSuccessWithData(
+                    return MyHelper::responseSuccessWithData(
                         200,
                         1,
                         200,
@@ -242,7 +242,7 @@ class StaffController extends Controller
                 return redirect($request->redirectTo)->with(["success" => "Berhasil Mengupdate Password"]);
             } else {
                 if ($request->is('api/*'))
-                    return RazkyFeb::responseErrorWithData(
+                    return MyHelper::responseErrorWithData(
                         400,
                         3,
                         400,

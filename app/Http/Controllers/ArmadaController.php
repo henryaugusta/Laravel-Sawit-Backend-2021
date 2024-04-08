@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\RazkyFeb;
-use App\Models\Material;
+use App\Helper\MyHelper;
 use App\Models\Truck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,7 +88,7 @@ class ArmadaController extends Controller
 
         if ($armada->save()) {
             if ($request->is('api/*'))
-                return RazkyFeb::responseSuccessWithData(
+                return MyHelper::responseSuccessWithData(
                     200, 1, 200,
                     "Berhasil Mengupdate Data",
                     "Success",
@@ -98,7 +97,7 @@ class ArmadaController extends Controller
             return back()->with(["success"=>"Berhasil Mengupdate Data"]);
         }else{
             if ($request->is('api/*'))
-                return RazkyFeb::responseErrorWithData(
+                return MyHelper::responseErrorWithData(
                     200, 3, 400,
                     "Berhasil Mengupdate Data",
                     "Success",

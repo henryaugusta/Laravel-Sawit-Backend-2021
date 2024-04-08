@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PHPUnit\Exception;
 
-class RazkyFeb
+class MyHelper
 {
 
     public static function hello()
