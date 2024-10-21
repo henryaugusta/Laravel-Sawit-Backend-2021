@@ -61,6 +61,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('manage', 'OutbondController@viewManage');
     });
 
+    Route::prefix('armada')->group(function () {
+        $cr = "ArmadaController";
+        Route::get('create', "$cr@viewCreate");
+        Route::post('store', "$cr@store");
+        Route::get('{id}/edit', "$cr@viewUpdate");
+        Route::post('{id}/update', "$cr@update");
+        Route::get('{id}/delete', "$cr@delete");
+        Route::get('manage', "$cr@viewManage");
+    });
+
 
     Route::prefix('news')->group(function () {
         $cr = "NewsController";
